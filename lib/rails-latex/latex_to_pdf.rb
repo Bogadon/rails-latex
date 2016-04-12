@@ -69,22 +69,28 @@ class LatexToPdf
         end
       else
         class << (@latex_escaper=Object.new)
-          ESCAPE_RE=/([{}_$&%#])|([\\^~|<>])/
-          ESC_MAP={
+          ESCAPE_RE = /([{}_$&%#])|([\\^~|<>])|([³ ])/
+          ESC_MAP = {
             '\\' => 'backslash',
-            '^' => 'asciicircum',
-            '~' => 'asciitilde',
-            '|' => 'bar',
-            '<' => 'less',
-            '>' => 'greater',
+            '^'  => 'asciicircum',
+            '~'  => 'asciitilde',
+            '|'  => 'bar',
+            '<'  => 'less',
+            '>'  => 'greater',
+          }
+          UNICODE = {
+            '³'  => '$^3$',
+            " "  => " ", # nonbreaking space => regular space 
           }
 
           def latex_esc(text)   # :nodoc:
             text.gsub(ESCAPE_RE) {|m|
               if $1
                 "\\#{m}"
-              else
+              elsif $2
                 "\\text#{ESC_MAP[m]}{}"
+              else
+                UNICODE[m]
               end
             }
           end
