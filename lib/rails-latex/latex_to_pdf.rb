@@ -90,7 +90,7 @@ class LatexToPdf
               else
                 UNICODE[m]
               end
-            }
+            }.encode('ASCII', undef: :replace) # unmapped 'unicode' chars => ?
           end
         end
       end
